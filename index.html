@@ -1,213 +1,312 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tryck inte här</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Mono&display=swap" rel="stylesheet"/>
+  <title>Peppol Validator</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --green-deep:   #0d2b1a;
-      --green-mid:    #1a4d2e;
-      --green-bright: #2d8c4e;
-      --green-neon:   #4eff91;
-      --cream:        #f0ede4;
-      --danger:       #ff4545;
+      --bg:        #f5f6f8;
+      --surface:   #ffffff;
+      --border:    #dde1e9;
+      --text:      #1a1f2e;
+      --subtle:    #6b7385;
+      --accent:    #2255cc;
+      --accent-lt: #eef2fc;
+      --radius:    12px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       min-height: 100vh;
-      background-color: var(--green-deep);
-      background-image:
-        radial-gradient(ellipse at 20% 30%, #1a4d2e88 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 70%, #2d8c4e44 0%, transparent 55%),
-        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232d8c4e' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      background: var(--bg);
+      font-family: 'IBM Plex Sans', sans-serif;
+      color: var(--text);
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: 48px 16px 80px;
+      transition: background-color 1s ease;
+    }
+
+    .header {
+      width: 100%;
+      max-width: 640px;
+      margin-bottom: 40px;
+      animation: fadeUp 0.6s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
       justify-content: center;
-      font-family: 'DM Mono', monospace;
-      overflow: hidden;
-    }
-
-    /* Floating orbs */
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.18;
-      pointer-events: none;
-      animation: drift 12s ease-in-out infinite alternate;
-    }
-    .orb-1 { width: 400px; height: 400px; background: var(--green-neon); top: -100px; left: -100px; animation-delay: 0s; }
-    .orb-2 { width: 300px; height: 300px; background: var(--green-bright); bottom: -80px; right: -80px; animation-delay: -4s; }
-    .orb-3 { width: 200px; height: 200px; background: var(--green-neon); top: 50%; left: 60%; animation-delay: -8s; }
-
-    @keyframes drift {
-      from { transform: translate(0, 0) scale(1); }
-      to   { transform: translate(30px, 20px) scale(1.08); }
-    }
-
-    /* Card */
-    .card {
-      position: relative;
-      background: linear-gradient(135deg, #ffffff0d, #ffffff05);
-      border: 1px solid #4eff9122;
-      border-radius: 24px;
-      padding: 64px 72px;
-      text-align: center;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 0 60px #0008, 0 0 0 1px #4eff9108;
-      animation: fadeUp 0.9s cubic-bezier(.22,1,.36,1) both;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(32px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--green-neon);
-      opacity: 0.7;
-      margin-bottom: 16px;
+      color: white;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      flex-shrink: 0;
     }
 
     h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      color: var(--cream);
-      line-height: 1.1;
-      margin-bottom: 48px;
-      text-shadow: 0 2px 24px #0006;
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
     }
 
-    h1 span {
-      color: var(--green-neon);
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--subtle);
+      margin-left: 48px;
     }
 
-    /* The Button */
-    .btn {
-      position: relative;
-      display: inline-block;
-      padding: 18px 44px;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-      color: var(--green-deep);
-      background: var(--green-neon);
-      border: none;
-      border-radius: 100px;
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: 0 2px 12px #0000000a;
+      animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) 0.1s both;
+    }
+
+    .card-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--subtle);
+      margin-bottom: 14px;
+    }
+
+    .dropzone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 48px 24px;
+      text-align: center;
       cursor: pointer;
-      letter-spacing: 0.02em;
-      box-shadow:
-        0 4px 24px #4eff9144,
-        0 0 0 0 #4eff9100;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-      overflow: hidden;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+      background: var(--bg);
     }
 
-    .btn::before {
-      content: '';
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--accent);
+      background: var(--accent-lt);
+    }
+
+    .dropzone input[type="file"] {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, #ffffffaa, transparent 60%);
-      border-radius: inherit;
-      opacity: 0.3;
-      pointer-events: none;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
     }
 
-    .btn:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow:
-        0 8px 36px #4eff9166,
-        0 0 0 6px #4eff9118;
+    .drop-icon {
+      width: 44px;
+      height: 44px;
+      margin: 0 auto 16px;
+      background: var(--accent-lt);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .btn:active {
-      transform: translateY(0) scale(0.98);
+    .drop-icon svg {
+      width: 22px; height: 22px;
+      stroke: var(--accent); fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
 
-    /* Warning tag below button */
-    .warning {
+    .drop-label {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .drop-label span {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .drop-hint {
+      font-size: 0.78rem;
+      color: var(--subtle);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .file-chosen {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      background: var(--accent-lt);
+      border: 1px solid #c5d4f5;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 16px;
+    }
+
+    .file-chosen.visible { display: flex; }
+
+    .file-chosen-icon {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .file-chosen-icon svg {
+      width: 16px; height: 16px;
+      stroke: white; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .file-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--accent);
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    .file-size { font-size: 0.72rem; color: var(--subtle); margin-top: 2px; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+    .options { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+
+    .option-chip {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: var(--subtle);
+      cursor: pointer;
+      transition: all 0.15s;
+      background: var(--surface);
+      user-select: none;
+    }
+
+    .option-chip input { display: none; }
+
+    .option-chip.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-lt);
+    }
+
+    .option-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .option-chip.active .option-dot::after {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .btn-validate {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 2px 8px #2255cc33;
+    }
+
+    .btn-validate:hover:not(:disabled) {
+      background: #1a44b0;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px #2255cc44;
+    }
+
+    .btn-validate:disabled {
+      background: #b0bbd4;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .info-footer {
+      width: 100%;
+      max-width: 640px;
       margin-top: 20px;
-      font-size: 0.68rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--danger);
-      opacity: 0.55;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) 0.2s both;
     }
 
-    /* Corner decoration */
-    .corner {
-      position: fixed;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--green-neon);
-      opacity: 0.25;
-      font-family: 'DM Mono', monospace;
-      transition: color 1s ease;
+    .info-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; color: var(--subtle);
     }
-    .corner-tl { top: 24px; left: 28px; }
-    .corner-br { bottom: 24px; right: 28px; }
+
+    .info-item svg {
+      width: 14px; height: 14px;
+      stroke: var(--subtle); fill: none;
+      stroke-width: 2; stroke-linecap: round;
+      flex-shrink: 0;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
     /* RED MODE */
-    body.red-mode {
-      background-color: #2b0d0d;
-      background-image:
-        radial-gradient(ellipse at 20% 30%, #4d1a1a88 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 70%, #8c2d2d44 0%, transparent 55%),
-        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238c2d2d' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      transition: background-color 1.2s ease;
-    }
-    body.red-mode .orb-1 { background: #ff4545; }
-    body.red-mode .orb-2 { background: #ff6a00; }
-    body.red-mode .orb-3 { background: #ff4545; }
-    body.red-mode .card  { border-color: #ff454522; box-shadow: 0 0 60px #0008, 0 0 0 1px #ff454508; }
-    body.red-mode h1 span { color: #ff6a6a; }
-    body.red-mode .eyebrow { color: #ff6a6a; }
-    body.red-mode .corner  { color: #ff6a6a; }
-    body.red-mode .btn {
-      background: #ff4545;
-      color: #fff;
-      box-shadow: 0 4px 24px #ff454544;
-    }
-    body.red-mode .btn:hover {
-      box-shadow: 0 8px 36px #ff454566, 0 0 0 6px #ff454518;
-    }
+    body.red-mode { background: #1a0505; }
+    body.red-mode .card { background: #1f0808; border-color: #5c1a1a; box-shadow: 0 0 60px #ff000022; }
+    body.red-mode h1 { color: #ffaaaa; }
+    body.red-mode .subtitle { color: #a06060; }
+    body.red-mode .btn-validate { background: #ff4545; box-shadow: 0 4px 24px #ff454544; }
 
-    /* Explosion canvas */
-    #explosion-canvas {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 999;
-    }
+    #explosion-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
 
-    /* Screen flash */
     #flash {
-      position: fixed;
-      inset: 0;
-      background: white;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 998;
+      position: fixed; inset: 0;
+      background: white; opacity: 0;
+      pointer-events: none; z-index: 998;
       transition: opacity 0.05s ease;
     }
-    #flash.boom { opacity: 0.85; }
+    #flash.boom { opacity: 0.9; }
 
-    /* Shake animation */
     @keyframes shake {
       0%   { transform: translate(0,0) rotate(0deg); }
       15%  { transform: translate(-8px, 6px) rotate(-2deg); }
-      30%  { transform: translate(8px, -6px) rotate(2deg); }
+      30%  { transform: translate(8px,-6px) rotate(2deg); }
       45%  { transform: translate(-6px, 4px) rotate(-1deg); }
-      60%  { transform: translate(6px, -4px) rotate(1deg); }
+      60%  { transform: translate(6px,-4px) rotate(1deg); }
       75%  { transform: translate(-3px, 2px) rotate(0deg); }
       100% { transform: translate(0,0) rotate(0deg); }
     }
@@ -219,25 +318,82 @@
   <canvas id="explosion-canvas"></canvas>
   <div id="flash"></div>
 
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-
-  <span class="corner corner-tl">v1.0.0 — classified</span>
-  <span class="corner corner-br">© ingen rättigheter förbehållna</span>
+  <div class="header">
+    <div class="logo-row">
+      <div class="logo-icon">PV</div>
+      <h1>Peppol Validator</h1>
+    </div>
+    <p class="subtitle">Validera fakturor och beställningar mot Peppol BIS-standarder</p>
+  </div>
 
   <div class="card">
-    <p class="eyebrow">⚠ varning ⚠</p>
-    <h1>Välkommen till<br/><span>den gröna sidan</span></h1>
-    <button class="btn" id="theBtn">Tryck inte här</button>
-    <p class="warning">◆ seriöst. gör det inte. ◆</p>
+    <p class="card-title">Ladda upp dokument</p>
+
+    <div class="dropzone" id="dropzone">
+      <input type="file" id="fileInput" accept=".xml,.ubl"/>
+      <div class="drop-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <p class="drop-label"><span>Klicka för att bläddra</span> eller dra och släpp en fil här</p>
+      <p class="drop-hint">XML / UBL — max 10 MB</p>
+    </div>
+
+    <div class="file-chosen" id="fileChosen">
+      <div class="file-chosen-icon">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div>
+        <div class="file-name" id="fileName">–</div>
+        <div class="file-size" id="fileSize">–</div>
+      </div>
+    </div>
+
+    <hr class="divider"/>
+
+    <p class="card-title">Valideringstyp</p>
+    <div class="options">
+      <label class="option-chip active">
+        <input type="radio" name="type" value="bis3" checked/>
+        <span class="option-dot"></span>Peppol BIS 3.0
+      </label>
+      <label class="option-chip">
+        <input type="radio" name="type" value="bis2"/>
+        <span class="option-dot"></span>Peppol BIS 2.0
+      </label>
+      <label class="option-chip">
+        <input type="radio" name="type" value="svefaktura"/>
+        <span class="option-dot"></span>Svefaktura 2.0
+      </label>
+    </div>
+
+    <button class="btn-validate" id="validateBtn" disabled>Validera</button>
+  </div>
+
+  <div class="info-footer">
+    <div class="info-item">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Filer bearbetas lokalt
+    </div>
+    <div class="info-item">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Stöder EN 16931
+    </div>
+    <div class="info-item">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      Certifierad accesspunkt
+    </div>
   </div>
 
   <script>
-    const btn = document.getElementById('theBtn');
-    const canvas = document.getElementById('explosion-canvas');
-    const ctx = canvas.getContext('2d');
-    const flash = document.getElementById('flash');
+    const dropzone    = document.getElementById('dropzone');
+    const fileInput   = document.getElementById('fileInput');
+    const fileChosen  = document.getElementById('fileChosen');
+    const fileName    = document.getElementById('fileName');
+    const fileSize    = document.getElementById('fileSize');
+    const validateBtn = document.getElementById('validateBtn');
+    const canvas      = document.getElementById('explosion-canvas');
+    const ctx         = canvas.getContext('2d');
+    const flash       = document.getElementById('flash');
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -246,13 +402,42 @@
       canvas.height = window.innerHeight;
     });
 
-    let particles = [];
-    let animating = false;
+    function formatBytes(b) {
+      if (b < 1024) return b + ' B';
+      if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+      return (b/(1024*1024)).toFixed(1) + ' MB';
+    }
+
+    function handleFile(file) {
+      if (!file) return;
+      fileName.textContent = file.name;
+      fileSize.textContent = formatBytes(file.size);
+      fileChosen.classList.add('visible');
+      validateBtn.disabled = false;
+    }
+
+    fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+    dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+    dropzone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      handleFile(e.dataTransfer.files[0]);
+    });
+
+    document.querySelectorAll('.option-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.option-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
+
+    // Explosion
+    let particles = [], animating = false;
 
     class Particle {
       constructor(x, y) {
-        this.x = x;
-        this.y = y;
+        this.x = x; this.y = y;
         const angle = Math.random() * Math.PI * 2;
         const speed = 4 + Math.random() * 14;
         this.vx = Math.cos(angle) * speed;
@@ -261,117 +446,78 @@
         this.decay = 0.012 + Math.random() * 0.022;
         this.size = 4 + Math.random() * 18;
         this.shape = Math.random() < 0.5 ? 'circle' : 'spark';
-        // colours: fire palette
-        const palettes = [
-          ['#ff4500','#ff6a00','#ffb300','#fff700'],
-          ['#ff0000','#ff4545','#ff8800','#ffdd00'],
-          ['#ff6a00','#ffb347','#fff700','#ffffff'],
-        ];
-        const p = palettes[Math.floor(Math.random() * palettes.length)];
-        this.color = p[Math.floor(Math.random() * p.length)];
+        const pal = [['#ff4500','#ff6a00','#ffb300','#fff700'],['#ff0000','#ff4545','#ff8800','#ffdd00'],['#ff6a00','#ffb347','#fff700','#ffffff']];
+        const p = pal[Math.floor(Math.random()*pal.length)];
+        this.color = p[Math.floor(Math.random()*p.length)];
         this.gravity = 0.25 + Math.random() * 0.2;
         this.rotation = Math.random() * Math.PI * 2;
         this.rotSpeed = (Math.random() - 0.5) * 0.3;
       }
       update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vy += this.gravity;
-        this.vx *= 0.97;
-        this.life -= this.decay;
-        this.rotation += this.rotSpeed;
-        this.size *= 0.985;
+        this.x += this.vx; this.y += this.vy;
+        this.vy += this.gravity; this.vx *= 0.97;
+        this.life -= this.decay; this.rotation += this.rotSpeed; this.size *= 0.985;
       }
       draw() {
         ctx.save();
         ctx.globalAlpha = Math.max(0, this.life);
-        ctx.fillStyle = this.color;
-        ctx.shadowColor = this.color;
-        ctx.shadowBlur = 12;
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.rotation);
+        ctx.fillStyle = this.color; ctx.shadowColor = this.color; ctx.shadowBlur = 12;
+        ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
         if (this.shape === 'circle') {
-          ctx.beginPath();
-          ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.beginPath(); ctx.arc(0,0,this.size/2,0,Math.PI*2); ctx.fill();
         } else {
-          // spark / shard
           ctx.beginPath();
-          ctx.moveTo(0, -this.size / 2);
-          ctx.lineTo(this.size / 5, 0);
-          ctx.lineTo(0, this.size / 2);
-          ctx.lineTo(-this.size / 5, 0);
-          ctx.closePath();
-          ctx.fill();
+          ctx.moveTo(0,-this.size/2); ctx.lineTo(this.size/5,0);
+          ctx.lineTo(0,this.size/2); ctx.lineTo(-this.size/5,0);
+          ctx.closePath(); ctx.fill();
         }
         ctx.restore();
       }
     }
 
-    function spawnExplosion(cx, cy) {
-      for (let i = 0; i < 220; i++) {
-        particles.push(new Particle(cx, cy));
-      }
-      // shockwave rings
-      for (let r = 0; r < 3; r++) {
-        setTimeout(() => spawnRing(cx, cy, r), r * 80);
+    function spawnRing(cx, cy, idx) {
+      for (let i = 0; i < 40; i++) {
+        const angle = (i/40)*Math.PI*2;
+        const p = new Particle(cx, cy);
+        p.vx = Math.cos(angle)*(8+idx*4); p.vy = Math.sin(angle)*(8+idx*4);
+        p.gravity = 0; p.size = 6; p.decay = 0.04;
+        p.color = ['#ffdd00','#ffffff','#ff8800'][idx%3];
+        particles.push(p);
       }
     }
 
-    function spawnRing(cx, cy, idx) {
-      const count = 40;
-      for (let i = 0; i < count; i++) {
-        const angle = (i / count) * Math.PI * 2;
-        const p = new Particle(cx, cy);
-        const speed = 8 + idx * 4;
-        p.vx = Math.cos(angle) * speed;
-        p.vy = Math.sin(angle) * speed;
-        p.gravity = 0;
-        p.size = 6;
-        p.decay = 0.04;
-        p.color = ['#ffdd00','#ffffff','#ff8800'][idx % 3];
-        particles.push(p);
-      }
+    function spawnExplosion(cx, cy) {
+      for (let i = 0; i < 220; i++) particles.push(new Particle(cx, cy));
+      for (let r = 0; r < 3; r++) setTimeout(() => spawnRing(cx, cy, r), r*80);
     }
 
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles = particles.filter(p => p.life > 0);
       particles.forEach(p => { p.update(); p.draw(); });
-      if (particles.length > 0 || animating) {
-        requestAnimationFrame(animate);
-      }
+      if (particles.length > 0 || animating) requestAnimationFrame(animate);
       if (particles.length === 0) animating = false;
     }
 
-    btn.addEventListener('click', () => {
-      if (btn.dataset.exploded) return;
-      btn.dataset.exploded = '1';
+    validateBtn.addEventListener('click', () => {
+      if (validateBtn.dataset.exploded) return;
+      validateBtn.dataset.exploded = '1';
 
-      // Flash
       flash.classList.add('boom');
       setTimeout(() => flash.classList.remove('boom'), 120);
 
-      // Shake
       document.body.classList.add('shaking');
       setTimeout(() => document.body.classList.remove('shaking'), 500);
 
-      // Explosion from button center
-      const r = btn.getBoundingClientRect();
-      const cx = r.left + r.width / 2;
-      const cy = r.top + r.height / 2;
+      const r = validateBtn.getBoundingClientRect();
       animating = true;
-      spawnExplosion(cx, cy);
+      spawnExplosion(r.left + r.width/2, r.top + r.height/2);
       animate();
 
-      // Go red after short delay
+      setTimeout(() => document.body.classList.add('red-mode'), 300);
       setTimeout(() => {
-        document.body.classList.add('red-mode');
-      }, 300);
-
-      // Change button text
-      setTimeout(() => {
-        btn.textContent = 'Jag sa ju det';
+        validateBtn.textContent = 'Lurad, jag kan inte ens programmera';
+        validateBtn.disabled = false;
       }, 600);
     });
   </script>
