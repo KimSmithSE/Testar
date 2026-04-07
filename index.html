@@ -3,522 +3,407 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Peppol Validator</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <title>Peppol Lookup 🐱</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg:        #f5f6f8;
-      --surface:   #ffffff;
-      --border:    #dde1e9;
-      --text:      #1a1f2e;
-      --subtle:    #6b7385;
-      --accent:    #2255cc;
-      --accent-lt: #eef2fc;
-      --radius:    12px;
+      --cream:  #fdf6ec;
+      --orange: #f4845f;
+      --dark:   #2b1f14;
+      --mid:    #7a5c3e;
+      --card:   #fffaf4;
+      --border: #e8d5bc;
+      --green:  #4caf82;
+      --red:    #e05c5c;
+      --radius: 16px;
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       min-height: 100vh;
-      background: var(--bg);
-      font-family: 'IBM Plex Sans', sans-serif;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 48px 16px 80px;
-      transition: background-color 1s ease;
+      background: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--dark);
+      overflow-x: hidden;
     }
-
+    .floaty-cat {
+      position: fixed; font-size: 1.8rem; pointer-events: none;
+      z-index: 0; opacity: 0.15;
+      animation: float-around linear infinite;
+    }
+    @keyframes float-around {
+      0%   { transform: translateY(0px) rotate(0deg); }
+      25%  { transform: translateY(-18px) rotate(5deg); }
+      50%  { transform: translateY(0px) rotate(0deg); }
+      75%  { transform: translateY(12px) rotate(-5deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+    .page {
+      position: relative; z-index: 1;
+      max-width: 680px; margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
     .header {
-      width: 100%;
-      max-width: 640px;
-      margin-bottom: 40px;
-      animation: fadeUp 0.6s cubic-bezier(.22,1,.36,1) both;
+      text-align: center; margin-bottom: 40px;
+      animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) both;
     }
-
-    .logo-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
+    .logo { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .logo-cat { font-size: 2.8rem; animation: wiggle 3s ease-in-out infinite; }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-5deg); }
+      50%       { transform: rotate(5deg); }
     }
-
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--accent);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 500;
-      flex-shrink: 0;
-    }
-
     h1 {
-      font-size: 1.6rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      color: var(--orange); letter-spacing: 0.02em; line-height: 1;
     }
+    .tagline { font-size: 0.88rem; color: var(--mid); margin-top: 6px; font-family: 'DM Mono', monospace; }
 
-    .subtitle {
-      font-size: 0.875rem;
-      color: var(--subtle);
-      margin-left: 48px;
-    }
-
-    .card {
-      width: 100%;
-      max-width: 640px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 32px;
-      box-shadow: 0 2px 12px #0000000a;
+    /* SEARCH CARD */
+    .search-card {
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: var(--radius); padding: 32px;
+      box-shadow: 0 4px 24px #b8824420;
       animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) 0.1s both;
     }
-
-    .card-title {
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--subtle);
-      margin-bottom: 14px;
+    .input-label {
+      display: block; font-family: 'DM Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 10px;
     }
-
-    .dropzone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 48px 24px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      position: relative;
-      background: var(--bg);
+    .input-row { display: flex; gap: 10px; align-items: stretch; }
+    .peppol-input {
+      flex: 1; padding: 14px 18px;
+      font-family: 'DM Mono', monospace; font-size: 1rem;
+      border: 2px solid var(--border); border-radius: 12px;
+      background: white; color: var(--dark); outline: none;
+      transition: border-color 0.2s;
     }
+    .peppol-input:focus { border-color: var(--orange); }
+    .peppol-input::placeholder { color: #c4a882; }
 
-    .dropzone:hover, .dropzone.dragover {
-      border-color: var(--accent);
-      background: var(--accent-lt);
+    /* CAT BUTTON */
+    .btn-search {
+      position: relative; padding: 14px 28px;
+      background: var(--orange); color: white; border: none;
+      border-radius: 12px; font-family: 'Fredoka One', cursive;
+      font-size: 1.05rem; cursor: pointer; letter-spacing: 0.03em;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+      box-shadow: 0 4px 0 #c45c35, 0 6px 16px #f4845f44;
+      white-space: nowrap;
     }
-
-    .dropzone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
+    .btn-search::before, .btn-search::after {
+      content: ''; position: absolute; top: -10px;
+      width: 0; height: 0;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-bottom: 14px solid var(--orange);
+      transition: border-bottom-color 0.15s;
     }
-
-    .drop-icon {
-      width: 44px;
-      height: 44px;
-      margin: 0 auto 16px;
-      background: var(--accent-lt);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .btn-search::before { left: 10px; }
+    .btn-search::after  { right: 10px; }
+    .btn-search:hover {
+      background: #e56b47; transform: translateY(-2px);
+      box-shadow: 0 6px 0 #c45c35, 0 10px 20px #f4845f55;
     }
+    .btn-search:hover::before, .btn-search:hover::after { border-bottom-color: #e56b47; }
+    .btn-search:active { transform: translateY(2px); box-shadow: 0 2px 0 #c45c35; }
 
-    .drop-icon svg {
-      width: 22px; height: 22px;
-      stroke: var(--accent); fill: none;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    .hint { margin-top: 10px; font-size: 0.75rem; color: var(--mid); font-family: 'DM Mono', monospace; }
+    .hint a { color: var(--orange); text-decoration: none; cursor: pointer; }
+
+    /* SPINNER */
+    .spinner { display: none; text-align: center; padding: 32px; font-size: 2.5rem; animation: spin-cat 0.7s linear infinite; }
+    .spinner.visible { display: block; }
+    @keyframes spin-cat { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    /* RESULT CARD */
+    .result-card {
+      display: none; margin-top: 24px;
+      background: var(--card); border: 2px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: 0 4px 24px #b8824420;
+      animation: fadeUp 0.5s cubic-bezier(.22,1,.36,1) both;
     }
-
-    .drop-label {
-      font-size: 0.95rem;
-      font-weight: 500;
-      margin-bottom: 6px;
+    .result-card.visible { display: block; }
+    .result-header {
+      background: linear-gradient(135deg, var(--orange), #f9a07a);
+      padding: 20px 24px; display: flex; align-items: center; gap: 14px;
     }
-
-    .drop-label span {
-      color: var(--accent);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    .drop-hint {
-      font-size: 0.78rem;
-      color: var(--subtle);
-      font-family: 'IBM Plex Mono', monospace;
-    }
-
-    .file-chosen {
-      display: none;
-      align-items: center;
-      gap: 12px;
-      background: var(--accent-lt);
-      border: 1px solid #c5d4f5;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-top: 16px;
-    }
-
-    .file-chosen.visible { display: flex; }
-
-    .file-chosen-icon {
-      width: 32px; height: 32px;
-      background: var(--accent);
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .file-chosen-icon svg {
-      width: 16px; height: 16px;
-      stroke: white; fill: none;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
-
-    .file-name {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.82rem;
-      color: var(--accent);
-      font-weight: 500;
-      word-break: break-all;
-    }
-
-    .file-size { font-size: 0.72rem; color: var(--subtle); margin-top: 2px; }
-
-    .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
-
-    .options { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
-
-    .option-chip {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 14px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.82rem;
-      color: var(--subtle);
-      cursor: pointer;
-      transition: all 0.15s;
-      background: var(--surface);
-      user-select: none;
-    }
-
-    .option-chip input { display: none; }
-
-    .option-chip.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--accent-lt);
-    }
-
-    .option-dot {
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      border: 2px solid currentColor;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .option-chip.active .option-dot::after {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-
-    .btn-validate {
-      width: 100%;
-      padding: 14px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      letter-spacing: 0.01em;
-      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 2px 8px #2255cc33;
-    }
-
-    .btn-validate:hover:not(:disabled) {
-      background: #1a44b0;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px #2255cc44;
-    }
-
-    .btn-validate:disabled {
-      background: #b0bbd4;
-      box-shadow: none;
-      cursor: not-allowed;
-    }
-
-    .info-footer {
-      width: 100%;
-      max-width: 640px;
-      margin-top: 20px;
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-      animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) 0.2s both;
-    }
-
-    .info-item {
+    .result-cat { font-size: 2rem; animation: bounce-cat 1s ease-in-out infinite alternate; }
+    @keyframes bounce-cat { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+    .result-title { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: white; line-height: 1.1; }
+    .result-pid { font-family: 'DM Mono', monospace; font-size: 0.73rem; color: #ffe0cc; margin-top: 3px; }
+    .result-body { padding: 24px; }
+    .result-section { margin-bottom: 24px; }
+    .result-section:last-child { margin-bottom: 0; }
+    .section-title {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 10px;
       display: flex; align-items: center; gap: 6px;
-      font-size: 0.75rem; color: var(--subtle);
     }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .info-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+    .info-item-label { font-size: 0.68rem; color: var(--mid); font-family: 'DM Mono', monospace; margin-bottom: 4px; }
+    .info-item-value { font-size: 0.88rem; font-weight: 600; color: var(--dark); word-break: break-all; }
+    .doctype-list { display: flex; flex-direction: column; gap: 8px; }
+    .doctype-pill {
+      display: flex; align-items: center; gap: 10px;
+      background: white; border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 14px; font-size: 0.82rem;
+    }
+    .pill-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .pill-name { font-weight: 600; color: var(--dark); font-size: 0.85rem; }
+    .pill-id { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--mid); word-break: break-all; margin-top: 2px; }
+    .badge { margin-left: auto; padding: 3px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; font-family: 'DM Mono', monospace; flex-shrink: 0; }
+    .badge-active     { background: #d4f5e5; color: #1a7a4a; }
+    .badge-deprecated { background: #fde8e8; color: #e05c5c; }
 
-    .info-item svg {
-      width: 14px; height: 14px;
-      stroke: var(--subtle); fill: none;
-      stroke-width: 2; stroke-linecap: round;
-      flex-shrink: 0;
+    /* ERROR / NOT FOUND */
+    .error-card, .notfound-card {
+      display: none; margin-top: 24px; border-radius: var(--radius);
+      padding: 28px; text-align: center;
+      animation: fadeUp 0.5s cubic-bezier(.22,1,.36,1) both;
+    }
+    .error-card.visible, .notfound-card.visible { display: block; }
+    .error-card { background: #fff5f5; border: 2px solid #f5c0c0; }
+    .notfound-card { background: #fffbf0; border: 2px solid #f0d890; }
+    .err-emoji, .nf-emoji { font-size: 2.5rem; margin-bottom: 12px; }
+    .error-card p { color: var(--red); font-size: 0.88rem; font-family: 'DM Mono', monospace; }
+    .notfound-card p { color: #8a7000; font-size: 0.88rem; font-family: 'DM Mono', monospace; }
+
+    /* PROXY STATUS */
+    .proxy-status {
+      margin-top: 8px; font-size: 0.72rem;
+      color: var(--mid); font-family: 'DM Mono', monospace;
+      text-align: center; min-height: 18px;
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
-    /* RED MODE */
-    body.red-mode { background: #1a0505; }
-    body.red-mode .card { background: #1f0808; border-color: #5c1a1a; box-shadow: 0 0 60px #ff000022; }
-    body.red-mode h1 { color: #ffaaaa; }
-    body.red-mode .subtitle { color: #a06060; }
-    body.red-mode .btn-validate { background: #ff4545; box-shadow: 0 4px 24px #ff454544; }
-
-    #explosion-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
-
-    #flash {
-      position: fixed; inset: 0;
-      background: white; opacity: 0;
-      pointer-events: none; z-index: 998;
-      transition: opacity 0.05s ease;
+    .footer {
+      text-align: center; margin-top: 32px;
+      font-size: 0.72rem; color: var(--mid);
+      font-family: 'DM Mono', monospace; opacity: 0.6;
+      animation: fadeUp 0.7s 0.3s both;
     }
-    #flash.boom { opacity: 0.9; }
-
-    @keyframes shake {
-      0%   { transform: translate(0,0) rotate(0deg); }
-      15%  { transform: translate(-8px, 6px) rotate(-2deg); }
-      30%  { transform: translate(8px,-6px) rotate(2deg); }
-      45%  { transform: translate(-6px, 4px) rotate(-1deg); }
-      60%  { transform: translate(6px,-4px) rotate(1deg); }
-      75%  { transform: translate(-3px, 2px) rotate(0deg); }
-      100% { transform: translate(0,0) rotate(0deg); }
-    }
-    body.shaking { animation: shake 0.5s ease; }
   </style>
 </head>
 <body>
 
-  <canvas id="explosion-canvas"></canvas>
-  <div id="flash"></div>
+  <!-- Floating cats -->
+  <div class="floaty-cat" style="top:5%;left:3%;animation-duration:7s;animation-delay:0s">🐱</div>
+  <div class="floaty-cat" style="top:12%;right:5%;animation-duration:9s;animation-delay:-2s">😸</div>
+  <div class="floaty-cat" style="top:35%;left:1%;animation-duration:8s;animation-delay:-4s">🐾</div>
+  <div class="floaty-cat" style="top:55%;right:2%;animation-duration:6s;animation-delay:-1s">🐱</div>
+  <div class="floaty-cat" style="top:70%;left:4%;animation-duration:10s;animation-delay:-3s">😺</div>
+  <div class="floaty-cat" style="top:80%;right:6%;animation-duration:7.5s;animation-delay:-5s">🐾</div>
+  <div class="floaty-cat" style="top:20%;left:91%;animation-duration:11s;animation-delay:-1.5s">😻</div>
+  <div class="floaty-cat" style="top:90%;left:45%;animation-duration:8.5s;animation-delay:-2.5s">🐱</div>
 
-  <div class="header">
-    <div class="logo-row">
-      <div class="logo-icon">PV</div>
-      <h1>Peppol Validator</h1>
-    </div>
-    <p class="subtitle">Validera fakturor och beställningar mot Peppol BIS-standarder</p>
-  </div>
-
-  <div class="card">
-    <p class="card-title">Ladda upp dokument</p>
-
-    <div class="dropzone" id="dropzone">
-      <input type="file" id="fileInput" accept=".xml,.ubl"/>
-      <div class="drop-icon">
-        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+  <div class="page">
+    <div class="header">
+      <div class="logo">
+        <span class="logo-cat">🐱</span>
+        <h1>Peppol Lookup</h1>
+        <span class="logo-cat" style="animation-delay:-1.5s">🐱</span>
       </div>
-      <p class="drop-label"><span>Klicka för att bläddra</span> eller dra och släpp en fil här</p>
-      <p class="drop-hint">XML / UBL — max 10 MB</p>
+      <p class="tagline">// söker i Peppol-nätverket · purrfessionally</p>
     </div>
 
-    <div class="file-chosen" id="fileChosen">
-      <div class="file-chosen-icon">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    <div class="search-card">
+      <label class="input-label" for="peppolInput">🐾 Ange Peppol-ID eller organisationsnummer</label>
+      <div class="input-row">
+        <input class="peppol-input" id="peppolInput" type="text"
+          placeholder="0007:5565597015  eller  5565597015"
+          autocomplete="off" spellcheck="false"/>
+        <button class="btn-search" id="searchBtn" onclick="doLookup()">Sök</button>
       </div>
-      <div>
-        <div class="file-name" id="fileName">–</div>
-        <div class="file-size" id="fileSize">–</div>
+      <p class="hint">
+        Svenska org.nr → ICD-kod <strong>0007</strong> &nbsp;·&nbsp;
+        Format: <code>0007:orgnummer</code> &nbsp;·&nbsp;
+        <a onclick="doExample()">testa ett exempel</a>
+      </p>
+    </div>
+
+    <div class="proxy-status" id="proxyStatus"></div>
+    <div class="spinner" id="spinner">🐱</div>
+
+    <div class="result-card" id="resultCard">
+      <div class="result-header">
+        <span class="result-cat" id="resultCat">😸</span>
+        <div>
+          <div class="result-title" id="resultName">–</div>
+          <div class="result-pid" id="resultPid">–</div>
+        </div>
+      </div>
+      <div class="result-body">
+        <div class="result-section">
+          <div class="section-title">🐾 Företagsinformation</div>
+          <div class="info-grid" id="infoGrid"></div>
+        </div>
+        <div class="result-section" id="doctypeSection">
+          <div class="section-title">📄 Dokumenttyper</div>
+          <div class="doctype-list" id="doctypeList"></div>
+        </div>
       </div>
     </div>
 
-    <hr class="divider"/>
-
-    <p class="card-title">Valideringstyp</p>
-    <div class="options">
-      <label class="option-chip active">
-        <input type="radio" name="type" value="bis3" checked/>
-        <span class="option-dot"></span>Peppol BIS 3.0
-      </label>
-      <label class="option-chip">
-        <input type="radio" name="type" value="bis2"/>
-        <span class="option-dot"></span>Peppol BIS 2.0
-      </label>
-      <label class="option-chip">
-        <input type="radio" name="type" value="svefaktura"/>
-        <span class="option-dot"></span>Svefaktura 2.0
-      </label>
+    <div class="error-card" id="errorCard">
+      <div class="err-emoji">😿</div>
+      <p id="errorMsg">Något gick fel.</p>
     </div>
 
-    <button class="btn-validate" id="validateBtn" disabled>Validera</button>
-  </div>
+    <div class="notfound-card" id="notfoundCard">
+      <div class="nf-emoji">🙀</div>
+      <p>Hittade ingen deltagare med det ID:t.<br/>Kontrollera formatet, t.ex. <code>0007:5565597015</code></p>
+    </div>
 
-  <div class="info-footer">
-    <div class="info-item">
-      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Filer bearbetas lokalt
-    </div>
-    <div class="info-item">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Stöder EN 16931
-    </div>
-    <div class="info-item">
-      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-      Certifierad accesspunkt
-    </div>
+    <div class="footer">powered by peppol.helger.com api · cat-themed for no particular reason 🐱</div>
   </div>
 
   <script>
-    const dropzone    = document.getElementById('dropzone');
-    const fileInput   = document.getElementById('fileInput');
-    const fileChosen  = document.getElementById('fileChosen');
-    const fileName    = document.getElementById('fileName');
-    const fileSize    = document.getElementById('fileSize');
-    const validateBtn = document.getElementById('validateBtn');
-    const canvas      = document.getElementById('explosion-canvas');
-    const ctx         = canvas.getContext('2d');
-    const flash       = document.getElementById('flash');
+    const HELGER = 'https://peppol.helger.com/api';
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
+    // CORS proxies tried in order
+    const PROXIES = [
+      { name: 'direkt',       fn: url => url },
+      { name: 'corsproxy.io', fn: url => `https://corsproxy.io/?url=${encodeURIComponent(url)}` },
+      { name: 'allorigins',   fn: url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}` },
+    ];
 
-    function formatBytes(b) {
-      if (b < 1024) return b + ' B';
-      if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
-      return (b/(1024*1024)).toFixed(1) + ' MB';
+    function show(id) { document.getElementById(id).classList.add('visible'); }
+    function hide(id) { document.getElementById(id).classList.remove('visible'); }
+    function setStatus(msg) { document.getElementById('proxyStatus').textContent = msg; }
+
+    async function fetchWithProxy(path) {
+      const target = `${HELGER}${path}`;
+      for (const proxy of PROXIES) {
+        setStatus(`försöker via ${proxy.name}…`);
+        try {
+          const res = await fetch(proxy.fn(target), { signal: AbortSignal.timeout(8000) });
+          if (res.ok || res.status === 404 || res.status === 400) {
+            setStatus(proxy.name === 'direkt' ? '' : `hämtade via ${proxy.name} 🐾`);
+            return res;
+          }
+        } catch(_) { /* try next */ }
+      }
+      throw new Error('Alla proxies misslyckades 😿');
     }
 
-    function handleFile(file) {
-      if (!file) return;
-      fileName.textContent = file.name;
-      fileSize.textContent = formatBytes(file.size);
-      fileChosen.classList.add('visible');
-      validateBtn.disabled = false;
+    function normalizeID(raw) {
+      raw = raw.trim();
+      if (raw.includes('::')) return raw;
+      if (/^\d{4}:/.test(raw)) return `iso6523-actorid-upis::${raw}`;
+      const digits = raw.replace(/\D/g, '');
+      if (digits.length >= 9 && digits.length <= 10) return `iso6523-actorid-upis::0007:${digits}`;
+      return `iso6523-actorid-upis::${raw}`;
     }
 
-    fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
-    dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('dragover'); });
-    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
-    dropzone.addEventListener('drop', e => {
-      e.preventDefault();
-      dropzone.classList.remove('dragover');
-      handleFile(e.dataTransfer.files[0]);
-    });
+    function docNiceName(id) {
+      if (id.includes('Invoice') && id.includes('billing:3.0'))    return { name: 'Peppol BIS Billing 3.0 — Faktura', icon: '🧾' };
+      if (id.includes('CreditNote') && id.includes('billing:3.0')) return { name: 'Peppol BIS Billing 3.0 — Kreditnota', icon: '↩️' };
+      if (id.includes('Order') && !id.includes('OrderResponse'))   return { name: 'Peppol BIS Order', icon: '📦' };
+      if (id.includes('OrderResponse'))                             return { name: 'Peppol BIS OrderResponse', icon: '✅' };
+      if (id.includes('Catalogue'))                                 return { name: 'Peppol BIS Katalog', icon: '📋' };
+      if (id.includes('DespatchAdvice'))                            return { name: 'Peppol BIS Leveransbesked', icon: '🚚' };
+      if (id.includes('ApplicationResponse'))                       return { name: 'Peppol MLR', icon: '📨' };
+      const short = id.split('::').pop().split('##')[0].split(':').pop();
+      return { name: short, icon: '📄' };
+    }
 
-    document.querySelectorAll('.option-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        document.querySelectorAll('.option-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
+    async function doLookup() {
+      const raw = document.getElementById('peppolInput').value;
+      if (!raw.trim()) { document.getElementById('peppolInput').focus(); return; }
+
+      ['resultCard','errorCard','notfoundCard'].forEach(hide);
+      document.getElementById('spinner').classList.add('visible');
+      document.getElementById('spinner').style.display = 'block';
+
+      const participantID = normalizeID(raw);
+      const encoded = encodeURIComponent(participantID);
+
+      try {
+        const res = await fetchWithProxy(`/smpquery/digitprod/${encoded}?businessCard=true`);
+
+        document.getElementById('spinner').classList.remove('visible');
+        document.getElementById('spinner').style.display = 'none';
+
+        if (res.status === 404 || res.status === 400) { show('notfoundCard'); return; }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const data = await res.json();
+        renderResult(data, participantID);
+
+      } catch (err) {
+        document.getElementById('spinner').classList.remove('visible');
+        document.getElementById('spinner').style.display = 'none';
+        setStatus('');
+        document.getElementById('errorMsg').textContent = err.message;
+        show('errorCard');
+      }
+    }
+
+    function renderResult(data, participantID) {
+      const cats = ['😸','😺','😻','🐱'];
+      document.getElementById('resultCat').textContent = cats[Math.floor(Math.random()*cats.length)];
+
+      let name = participantID, country = '–', geoinfo = '–', website = '–', regdate = '–';
+      if (data.businessCard?.entity?.length > 0) {
+        const e = data.businessCard.entity[0];
+        if (e.name?.length > 0) name = e.name[0].name || name;
+        country = e.countrycode || '–';
+        geoinfo = e.geoinfo || '–';
+        website = e.website?.length > 0 ? e.website[0] : '–';
+        regdate = e.regdate || '–';
+      }
+
+      document.getElementById('resultName').textContent = name;
+      document.getElementById('resultPid').textContent  = participantID;
+
+      const grid = document.getElementById('infoGrid');
+      grid.innerHTML = '';
+      [['Land', country],['Plats', geoinfo],['Registrerat', regdate],['Webbplats', website]].forEach(([label, value]) => {
+        const el = document.createElement('div');
+        el.className = 'info-item';
+        el.innerHTML = `<div class="info-item-label">${label}</div><div class="info-item-value">${value}</div>`;
+        grid.appendChild(el);
       });
-    });
 
-    // Explosion
-    let particles = [], animating = false;
+      const list = document.getElementById('doctypeList');
+      list.innerHTML = '';
+      if (data.urls?.length > 0) {
+        document.getElementById('doctypeSection').style.display = '';
+        data.urls.forEach(url => {
+          const { name: niceName, icon } = docNiceName(url.documentTypeID || '');
+          const deprecated = url.isDeprecated;
+          const pill = document.createElement('div');
+          pill.className = 'doctype-pill';
+          const shortId = (url.documentTypeID||'').substring(0,90) + ((url.documentTypeID||'').length > 90 ? '…' : '');
+          pill.innerHTML = `
+            <span class="pill-icon">${icon}</span>
+            <div><div class="pill-name">${niceName}</div><div class="pill-id">${shortId}</div></div>
+            <span class="badge ${deprecated ? 'badge-deprecated' : 'badge-active'}">${deprecated ? 'deprecated' : 'aktiv'}</span>`;
+          list.appendChild(pill);
+        });
+      } else {
+        document.getElementById('doctypeSection').style.display = 'none';
+      }
 
-    class Particle {
-      constructor(x, y) {
-        this.x = x; this.y = y;
-        const angle = Math.random() * Math.PI * 2;
-        const speed = 4 + Math.random() * 14;
-        this.vx = Math.cos(angle) * speed;
-        this.vy = Math.sin(angle) * speed - Math.random() * 6;
-        this.life = 1;
-        this.decay = 0.012 + Math.random() * 0.022;
-        this.size = 4 + Math.random() * 18;
-        this.shape = Math.random() < 0.5 ? 'circle' : 'spark';
-        const pal = [['#ff4500','#ff6a00','#ffb300','#fff700'],['#ff0000','#ff4545','#ff8800','#ffdd00'],['#ff6a00','#ffb347','#fff700','#ffffff']];
-        const p = pal[Math.floor(Math.random()*pal.length)];
-        this.color = p[Math.floor(Math.random()*p.length)];
-        this.gravity = 0.25 + Math.random() * 0.2;
-        this.rotation = Math.random() * Math.PI * 2;
-        this.rotSpeed = (Math.random() - 0.5) * 0.3;
-      }
-      update() {
-        this.x += this.vx; this.y += this.vy;
-        this.vy += this.gravity; this.vx *= 0.97;
-        this.life -= this.decay; this.rotation += this.rotSpeed; this.size *= 0.985;
-      }
-      draw() {
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, this.life);
-        ctx.fillStyle = this.color; ctx.shadowColor = this.color; ctx.shadowBlur = 12;
-        ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
-        if (this.shape === 'circle') {
-          ctx.beginPath(); ctx.arc(0,0,this.size/2,0,Math.PI*2); ctx.fill();
-        } else {
-          ctx.beginPath();
-          ctx.moveTo(0,-this.size/2); ctx.lineTo(this.size/5,0);
-          ctx.lineTo(0,this.size/2); ctx.lineTo(-this.size/5,0);
-          ctx.closePath(); ctx.fill();
-        }
-        ctx.restore();
-      }
+      show('resultCard');
     }
 
-    function spawnRing(cx, cy, idx) {
-      for (let i = 0; i < 40; i++) {
-        const angle = (i/40)*Math.PI*2;
-        const p = new Particle(cx, cy);
-        p.vx = Math.cos(angle)*(8+idx*4); p.vy = Math.sin(angle)*(8+idx*4);
-        p.gravity = 0; p.size = 6; p.decay = 0.04;
-        p.color = ['#ffdd00','#ffffff','#ff8800'][idx%3];
-        particles.push(p);
-      }
+    function doExample() {
+      document.getElementById('peppolInput').value = '0007:5565597015';
+      doLookup();
     }
 
-    function spawnExplosion(cx, cy) {
-      for (let i = 0; i < 220; i++) particles.push(new Particle(cx, cy));
-      for (let r = 0; r < 3; r++) setTimeout(() => spawnRing(cx, cy, r), r*80);
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles = particles.filter(p => p.life > 0);
-      particles.forEach(p => { p.update(); p.draw(); });
-      if (particles.length > 0 || animating) requestAnimationFrame(animate);
-      if (particles.length === 0) animating = false;
-    }
-
-    validateBtn.addEventListener('click', () => {
-      if (validateBtn.dataset.exploded) return;
-      validateBtn.dataset.exploded = '1';
-
-      flash.classList.add('boom');
-      setTimeout(() => flash.classList.remove('boom'), 120);
-
-      document.body.classList.add('shaking');
-      setTimeout(() => document.body.classList.remove('shaking'), 500);
-
-      const r = validateBtn.getBoundingClientRect();
-      animating = true;
-      spawnExplosion(r.left + r.width/2, r.top + r.height/2);
-      animate();
-
-      setTimeout(() => document.body.classList.add('red-mode'), 300);
-      setTimeout(() => {
-        validateBtn.textContent = 'Lurad, jag kan inte ens programmera';
-        validateBtn.disabled = false;
-      }, 600);
+    document.getElementById('peppolInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLookup();
     });
   </script>
 </body>
