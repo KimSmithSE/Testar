@@ -25,6 +25,8 @@
       color: var(--dark);
       overflow-x: hidden;
     }
+
+    /* Floating cats */
     .floaty-cat {
       position: fixed; font-size: 1.8rem; pointer-events: none;
       z-index: 0; opacity: 0.15;
@@ -37,11 +39,14 @@
       75%  { transform: translateY(12px) rotate(-5deg); }
       100% { transform: translateY(0px) rotate(0deg); }
     }
+
     .page {
       position: relative; z-index: 1;
-      max-width: 680px; margin: 0 auto;
+      max-width: 700px; margin: 0 auto;
       padding: 48px 20px 80px;
     }
+
+    /* Header */
     .header {
       text-align: center; margin-bottom: 40px;
       animation: fadeUp 0.7s cubic-bezier(.22,1,.36,1) both;
@@ -59,7 +64,7 @@
     }
     .tagline { font-size: 0.88rem; color: var(--mid); margin-top: 6px; font-family: 'DM Mono', monospace; }
 
-    /* SEARCH CARD */
+    /* Search card */
     .search-card {
       background: var(--card); border: 2px solid var(--border);
       border-radius: var(--radius); padding: 32px;
@@ -71,7 +76,7 @@
       font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--mid); margin-bottom: 10px;
     }
-    .input-row { display: flex; gap: 10px; align-items: stretch; }
+    .input-row { display: flex; gap: 10px; }
     .peppol-input {
       flex: 1; padding: 14px 18px;
       font-family: 'DM Mono', monospace; font-size: 1rem;
@@ -82,12 +87,12 @@
     .peppol-input:focus { border-color: var(--orange); }
     .peppol-input::placeholder { color: #c4a882; }
 
-    /* CAT BUTTON */
+    /* Cat button with ears */
     .btn-search {
       position: relative; padding: 14px 28px;
       background: var(--orange); color: white; border: none;
       border-radius: 12px; font-family: 'Fredoka One', cursive;
-      font-size: 1.05rem; cursor: pointer; letter-spacing: 0.03em;
+      font-size: 1.05rem; cursor: pointer;
       transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
       box-shadow: 0 4px 0 #c45c35, 0 6px 16px #f4845f44;
       white-space: nowrap;
@@ -102,22 +107,19 @@
     }
     .btn-search::before { left: 10px; }
     .btn-search::after  { right: 10px; }
-    .btn-search:hover {
-      background: #e56b47; transform: translateY(-2px);
-      box-shadow: 0 6px 0 #c45c35, 0 10px 20px #f4845f55;
-    }
+    .btn-search:hover { background: #e56b47; transform: translateY(-2px); box-shadow: 0 6px 0 #c45c35, 0 10px 20px #f4845f55; }
     .btn-search:hover::before, .btn-search:hover::after { border-bottom-color: #e56b47; }
     .btn-search:active { transform: translateY(2px); box-shadow: 0 2px 0 #c45c35; }
 
     .hint { margin-top: 10px; font-size: 0.75rem; color: var(--mid); font-family: 'DM Mono', monospace; }
     .hint a { color: var(--orange); text-decoration: none; cursor: pointer; }
 
-    /* SPINNER */
-    .spinner { display: none; text-align: center; padding: 32px; font-size: 2.5rem; animation: spin-cat 0.7s linear infinite; }
+    /* Spinner */
+    .spinner { display: none; text-align: center; padding: 36px; font-size: 2.5rem; animation: spin-cat 0.7s linear infinite; }
     .spinner.visible { display: block; }
-    @keyframes spin-cat { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spin-cat { to { transform: rotate(360deg); } }
 
-    /* RESULT CARD */
+    /* Result card */
     .result-card {
       display: none; margin-top: 24px;
       background: var(--card); border: 2px solid var(--border);
@@ -126,14 +128,16 @@
       animation: fadeUp 0.5s cubic-bezier(.22,1,.36,1) both;
     }
     .result-card.visible { display: block; }
+
     .result-header {
       background: linear-gradient(135deg, var(--orange), #f9a07a);
       padding: 20px 24px; display: flex; align-items: center; gap: 14px;
     }
-    .result-cat { font-size: 2rem; animation: bounce-cat 1s ease-in-out infinite alternate; }
-    @keyframes bounce-cat { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+    .result-cat { font-size: 2.2rem; animation: bounce-cat 1s ease-in-out infinite alternate; }
+    @keyframes bounce-cat { to { transform: translateY(-6px); } }
     .result-title { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: white; line-height: 1.1; }
-    .result-pid { font-family: 'DM Mono', monospace; font-size: 0.73rem; color: #ffe0cc; margin-top: 3px; }
+    .result-subtitle { font-family: 'DM Mono', monospace; font-size: 0.73rem; color: #ffe0cc; margin-top: 3px; }
+
     .result-body { padding: 24px; }
     .result-section { margin-bottom: 24px; }
     .result-section:last-child { margin-bottom: 0; }
@@ -144,47 +148,44 @@
       display: flex; align-items: center; gap: 6px;
     }
     .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 500px) { .info-grid { grid-template-columns: 1fr; } }
     .info-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
     .info-item-label { font-size: 0.68rem; color: var(--mid); font-family: 'DM Mono', monospace; margin-bottom: 4px; }
-    .info-item-value { font-size: 0.88rem; font-weight: 600; color: var(--dark); word-break: break-all; }
+    .info-item-value { font-size: 0.85rem; font-weight: 600; color: var(--dark); word-break: break-all; }
+    .info-item-value a { color: var(--orange); text-decoration: none; }
+    .info-item-value a:hover { text-decoration: underline; }
+
+    /* Doc type pills */
     .doctype-list { display: flex; flex-direction: column; gap: 8px; }
     .doctype-pill {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: flex-start; gap: 10px;
       background: white; border: 1px solid var(--border);
-      border-radius: 10px; padding: 10px 14px; font-size: 0.82rem;
+      border-radius: 10px; padding: 12px 14px;
     }
-    .pill-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .pill-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
     .pill-name { font-weight: 600; color: var(--dark); font-size: 0.85rem; }
-    .pill-id { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--mid); word-break: break-all; margin-top: 2px; }
-    .badge { margin-left: auto; padding: 3px 8px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; font-family: 'DM Mono', monospace; flex-shrink: 0; }
-    .badge-active     { background: #d4f5e5; color: #1a7a4a; }
-    .badge-deprecated { background: #fde8e8; color: #e05c5c; }
+    .pill-id { font-family: 'DM Mono', monospace; font-size: 0.63rem; color: var(--mid); word-break: break-all; margin-top: 3px; line-height: 1.4; }
 
-    /* ERROR / NOT FOUND */
+    /* Error / not found */
     .error-card, .notfound-card {
       display: none; margin-top: 24px; border-radius: var(--radius);
       padding: 28px; text-align: center;
       animation: fadeUp 0.5s cubic-bezier(.22,1,.36,1) both;
     }
     .error-card.visible, .notfound-card.visible { display: block; }
-    .error-card { background: #fff5f5; border: 2px solid #f5c0c0; }
+    .error-card    { background: #fff5f5; border: 2px solid #f5c0c0; }
     .notfound-card { background: #fffbf0; border: 2px solid #f0d890; }
     .err-emoji, .nf-emoji { font-size: 2.5rem; margin-bottom: 12px; }
-    .error-card p { color: var(--red); font-size: 0.88rem; font-family: 'DM Mono', monospace; }
-    .notfound-card p { color: #8a7000; font-size: 0.88rem; font-family: 'DM Mono', monospace; }
-
-    /* PROXY STATUS */
-    .proxy-status {
-      margin-top: 8px; font-size: 0.72rem;
-      color: var(--mid); font-family: 'DM Mono', monospace;
-      text-align: center; min-height: 18px;
-    }
+    .error-card p    { color: var(--red); font-size: 0.88rem; font-family: 'DM Mono', monospace; line-height: 1.6; }
+    .notfound-card p { color: #8a7000;   font-size: 0.88rem; font-family: 'DM Mono', monospace; line-height: 1.6; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
     .footer {
       text-align: center; margin-top: 32px;
       font-size: 0.72rem; color: var(--mid);
@@ -195,7 +196,6 @@
 </head>
 <body>
 
-  <!-- Floating cats -->
   <div class="floaty-cat" style="top:5%;left:3%;animation-duration:7s;animation-delay:0s">🐱</div>
   <div class="floaty-cat" style="top:12%;right:5%;animation-duration:9s;animation-delay:-2s">😸</div>
   <div class="floaty-cat" style="top:35%;left:1%;animation-duration:8s;animation-delay:-4s">🐾</div>
@@ -206,6 +206,7 @@
   <div class="floaty-cat" style="top:90%;left:45%;animation-duration:8.5s;animation-delay:-2.5s">🐱</div>
 
   <div class="page">
+
     <div class="header">
       <div class="logo">
         <span class="logo-cat">🐱</span>
@@ -221,33 +222,32 @@
         <input class="peppol-input" id="peppolInput" type="text"
           placeholder="0007:5565597015  eller  5565597015"
           autocomplete="off" spellcheck="false"/>
-        <button class="btn-search" id="searchBtn" onclick="doLookup()">Sök</button>
+        <button class="btn-search" onclick="doLookup()">Sök</button>
       </div>
       <p class="hint">
-        Svenska org.nr → ICD-kod <strong>0007</strong> &nbsp;·&nbsp;
+        Svenska org.nr → ICD <strong>0007</strong> &nbsp;·&nbsp;
         Format: <code>0007:orgnummer</code> &nbsp;·&nbsp;
         <a onclick="doExample()">testa ett exempel</a>
       </p>
     </div>
 
-    <div class="proxy-status" id="proxyStatus"></div>
     <div class="spinner" id="spinner">🐱</div>
 
     <div class="result-card" id="resultCard">
       <div class="result-header">
         <span class="result-cat" id="resultCat">😸</span>
         <div>
-          <div class="result-title" id="resultName">–</div>
-          <div class="result-pid" id="resultPid">–</div>
+          <div class="result-title" id="resultTitle">–</div>
+          <div class="result-subtitle" id="resultSubtitle">–</div>
         </div>
       </div>
       <div class="result-body">
         <div class="result-section">
-          <div class="section-title">🐾 Företagsinformation</div>
+          <div class="section-title">🐾 Teknisk information</div>
           <div class="info-grid" id="infoGrid"></div>
         </div>
         <div class="result-section" id="doctypeSection">
-          <div class="section-title">📄 Dokumenttyper</div>
+          <div class="section-title">📄 Dokumenttyper <span id="doctypeCount" style="font-size:0.8em;opacity:0.6"></span></div>
           <div class="doctype-list" id="doctypeList"></div>
         </div>
       </div>
@@ -260,134 +260,101 @@
 
     <div class="notfound-card" id="notfoundCard">
       <div class="nf-emoji">🙀</div>
-      <p>Hittade ingen deltagare med det ID:t.<br/>Kontrollera formatet, t.ex. <code>0007:5565597015</code></p>
+      <p>Hittade ingen deltagare med det ID:t.<br/>Är formatet rätt? T.ex. <code>0007:5565597015</code></p>
     </div>
 
-    <div class="footer">powered by peppol.helger.com api · cat-themed for no particular reason 🐱</div>
+    <div class="footer">
+      peppol lookup · via cloudflare worker + sml/smp · cat-themed for no particular reason 🐱
+    </div>
+
   </div>
 
   <script>
-    const HELGER = 'https://peppol.helger.com/api';
-
-    // CORS proxies tried in order
-    const PROXIES = [
-      { name: 'direkt',       fn: url => url },
-      { name: 'corsproxy.io', fn: url => `https://corsproxy.io/?url=${encodeURIComponent(url)}` },
-      { name: 'allorigins',   fn: url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}` },
-    ];
+    const WORKER = 'https://peppol-lookup.kim-smith.workers.dev';
 
     function show(id) { document.getElementById(id).classList.add('visible'); }
     function hide(id) { document.getElementById(id).classList.remove('visible'); }
-    function setStatus(msg) { document.getElementById('proxyStatus').textContent = msg; }
-
-    async function fetchWithProxy(path) {
-      const target = `${HELGER}${path}`;
-      for (const proxy of PROXIES) {
-        setStatus(`försöker via ${proxy.name}…`);
-        try {
-          const res = await fetch(proxy.fn(target), { signal: AbortSignal.timeout(8000) });
-          if (res.ok || res.status === 404 || res.status === 400) {
-            setStatus(proxy.name === 'direkt' ? '' : `hämtade via ${proxy.name} 🐾`);
-            return res;
-          }
-        } catch(_) { /* try next */ }
-      }
-      throw new Error('Alla proxies misslyckades 😿');
-    }
-
-    function normalizeID(raw) {
-      raw = raw.trim();
-      if (raw.includes('::')) return raw;
-      if (/^\d{4}:/.test(raw)) return `iso6523-actorid-upis::${raw}`;
-      const digits = raw.replace(/\D/g, '');
-      if (digits.length >= 9 && digits.length <= 10) return `iso6523-actorid-upis::0007:${digits}`;
-      return `iso6523-actorid-upis::${raw}`;
-    }
-
-    function docNiceName(id) {
-      if (id.includes('Invoice') && id.includes('billing:3.0'))    return { name: 'Peppol BIS Billing 3.0 — Faktura', icon: '🧾' };
-      if (id.includes('CreditNote') && id.includes('billing:3.0')) return { name: 'Peppol BIS Billing 3.0 — Kreditnota', icon: '↩️' };
-      if (id.includes('Order') && !id.includes('OrderResponse'))   return { name: 'Peppol BIS Order', icon: '📦' };
-      if (id.includes('OrderResponse'))                             return { name: 'Peppol BIS OrderResponse', icon: '✅' };
-      if (id.includes('Catalogue'))                                 return { name: 'Peppol BIS Katalog', icon: '📋' };
-      if (id.includes('DespatchAdvice'))                            return { name: 'Peppol BIS Leveransbesked', icon: '🚚' };
-      if (id.includes('ApplicationResponse'))                       return { name: 'Peppol MLR', icon: '📨' };
-      const short = id.split('::').pop().split('##')[0].split(':').pop();
-      return { name: short, icon: '📄' };
-    }
 
     async function doLookup() {
-      const raw = document.getElementById('peppolInput').value;
-      if (!raw.trim()) { document.getElementById('peppolInput').focus(); return; }
+      const raw = document.getElementById('peppolInput').value.trim();
+      if (!raw) { document.getElementById('peppolInput').focus(); return; }
 
       ['resultCard','errorCard','notfoundCard'].forEach(hide);
-      document.getElementById('spinner').classList.add('visible');
-      document.getElementById('spinner').style.display = 'block';
-
-      const participantID = normalizeID(raw);
-      const encoded = encodeURIComponent(participantID);
+      const spinner = document.getElementById('spinner');
+      spinner.classList.add('visible');
+      spinner.style.display = 'block';
 
       try {
-        const res = await fetchWithProxy(`/smpquery/digitprod/${encoded}?businessCard=true`);
+        const res = await fetch(`${WORKER}/lookup?peppolId=${encodeURIComponent(raw)}`);
+        spinner.classList.remove('visible');
+        spinner.style.display = 'none';
 
-        document.getElementById('spinner').classList.remove('visible');
-        document.getElementById('spinner').style.display = 'none';
+        if (res.status === 404 || res.status === 400) {
+          const data = await res.json().catch(() => ({}));
+          if (data.error && data.error.includes('hittades inte')) {
+            show('notfoundCard');
+          } else {
+            show('notfoundCard');
+          }
+          return;
+        }
 
-        if (res.status === 404 || res.status === 400) { show('notfoundCard'); return; }
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+          throw new Error(data.error || `HTTP ${res.status}`);
+        }
 
         const data = await res.json();
-        renderResult(data, participantID);
+        renderResult(data);
 
       } catch (err) {
-        document.getElementById('spinner').classList.remove('visible');
-        document.getElementById('spinner').style.display = 'none';
-        setStatus('');
+        spinner.classList.remove('visible');
+        spinner.style.display = 'none';
         document.getElementById('errorMsg').textContent = err.message;
         show('errorCard');
       }
     }
 
-    function renderResult(data, participantID) {
-      const cats = ['😸','😺','😻','🐱'];
+    function renderResult(data) {
+      const cats = ['😸','😺','😻','🐱','😼'];
       document.getElementById('resultCat').textContent = cats[Math.floor(Math.random()*cats.length)];
+      document.getElementById('resultTitle').textContent = data.participantId;
+      document.getElementById('resultSubtitle').textContent = `${data.documentTypeCount} dokumenttyp${data.documentTypeCount !== 1 ? 'er' : ''}`;
 
-      let name = participantID, country = '–', geoinfo = '–', website = '–', regdate = '–';
-      if (data.businessCard?.entity?.length > 0) {
-        const e = data.businessCard.entity[0];
-        if (e.name?.length > 0) name = e.name[0].name || name;
-        country = e.countrycode || '–';
-        geoinfo = e.geoinfo || '–';
-        website = e.website?.length > 0 ? e.website[0] : '–';
-        regdate = e.regdate || '–';
-      }
-
-      document.getElementById('resultName').textContent = name;
-      document.getElementById('resultPid').textContent  = participantID;
-
+      // Info grid
       const grid = document.getElementById('infoGrid');
       grid.innerHTML = '';
-      [['Land', country],['Plats', geoinfo],['Registrerat', regdate],['Webbplats', website]].forEach(([label, value]) => {
+      const infoItems = [
+        { label: 'Participant ID', value: data.participantId },
+        { label: 'SMP-server', value: `<a href="${data.smpBase}" target="_blank">${data.smpBase}</a>` },
+        { label: 'SML DNS-namn', value: data.smlDnsName },
+        { label: 'SMP Services URL', value: `<a href="${data.smpUrl}" target="_blank">Öppna XML ↗</a>` },
+      ];
+      infoItems.forEach(({ label, value }) => {
         const el = document.createElement('div');
         el.className = 'info-item';
         el.innerHTML = `<div class="info-item-label">${label}</div><div class="info-item-value">${value}</div>`;
         grid.appendChild(el);
       });
 
+      // Doc types
       const list = document.getElementById('doctypeList');
       list.innerHTML = '';
-      if (data.urls?.length > 0) {
+      document.getElementById('doctypeCount').textContent = `(${data.documentTypeCount})`;
+
+      if (data.documentTypes && data.documentTypes.length > 0) {
         document.getElementById('doctypeSection').style.display = '';
-        data.urls.forEach(url => {
-          const { name: niceName, icon } = docNiceName(url.documentTypeID || '');
-          const deprecated = url.isDeprecated;
+        data.documentTypes.forEach(doc => {
           const pill = document.createElement('div');
           pill.className = 'doctype-pill';
-          const shortId = (url.documentTypeID||'').substring(0,90) + ((url.documentTypeID||'').length > 90 ? '…' : '');
+          const icon = doc.niceName.split(' ').pop(); // last char is emoji
+          const name = doc.niceName.slice(0, -2).trim();
           pill.innerHTML = `
             <span class="pill-icon">${icon}</span>
-            <div><div class="pill-name">${niceName}</div><div class="pill-id">${shortId}</div></div>
-            <span class="badge ${deprecated ? 'badge-deprecated' : 'badge-active'}">${deprecated ? 'deprecated' : 'aktiv'}</span>`;
+            <div>
+              <div class="pill-name">${name}</div>
+              <div class="pill-id">${doc.id}</div>
+            </div>`;
           list.appendChild(pill);
         });
       } else {
