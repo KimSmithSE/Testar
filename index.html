@@ -192,6 +192,17 @@
       font-family: 'DM Mono', monospace; opacity: 0.6;
       animation: fadeUp 0.7s 0.3s both;
     }
+
+    .search-card-wrapper { position: relative; margin-top: 60px; }
+    .sleeping-cat { position: absolute; top: -82px; left: 50%; transform: translateX(-50%); width: 170px; pointer-events: none; z-index: 2; }
+    .cat-tail { transform-origin: 56px 72px; animation: tailWag 3.5s ease-in-out infinite; }
+    @keyframes tailWag { 0%,100%{transform:rotate(0deg)} 40%{transform:rotate(16deg)} 70%{transform:rotate(-10deg)} }
+    .cat-chest { animation: breathe 3s ease-in-out infinite; transform-origin: 80px 52px; }
+    @keyframes breathe { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(1.07)} }
+    .zzz { animation: floatZ 3s ease-in-out infinite; }
+    .zzz2 { animation: floatZ 3s ease-in-out infinite 1s; }
+    .zzz3 { animation: floatZ 3s ease-in-out infinite 2s; }
+    @keyframes floatZ { 0%{opacity:0;transform:translate(0,0) scale(0.7)} 20%{opacity:1} 80%{opacity:0.6} 100%{opacity:0;transform:translate(-14px,-24px) scale(1.2)} }
   </style>
 </head>
 <body>
@@ -216,6 +227,50 @@
       <p class="tagline">// söker i Peppol-nätverket · purrfessionally</p>
     </div>
 
+  <div class="search-card-wrapper">
+      <svg class="sleeping-cat" viewBox="0 0 170 90" xmlns="http://www.w3.org/2000/svg">
+        <!-- Tail -->
+        <g class="cat-tail">
+          <path d="M56 72 Q30 88 34 108 Q38 122 52 118" stroke="#c8956a" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M56 72 Q30 88 34 108 Q38 122 52 118" stroke="#d4a574" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="53" cy="116" rx="8" ry="6" fill="#b07848" transform="rotate(-20 53 116)"/>
+        </g>
+        <!-- Body + head -->
+        <g class="cat-chest">
+          <ellipse cx="85" cy="62" rx="32" ry="26" fill="#c8956a"/>
+          <circle cx="85" cy="32" r="24" fill="#d4a574"/>
+          <!-- Ears -->
+          <polygon points="65,16 57,0 74,14" fill="#d4a574"/>
+          <polygon points="105,16 113,0 96,14" fill="#d4a574"/>
+          <polygon points="66,14 60,2 73,13" fill="#f4a0a0" opacity="0.55"/>
+          <polygon points="104,14 110,2 97,13" fill="#f4a0a0" opacity="0.55"/>
+          <!-- Sleeping eyes -->
+          <path d="M73 33 Q77 29 81 33" stroke="#5a3a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M89 33 Q93 29 97 33" stroke="#5a3a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <!-- Nose -->
+          <ellipse cx="85" cy="38" rx="2.5" ry="1.8" fill="#e88080"/>
+          <!-- Mouth -->
+          <path d="M82 40 Q85 43 88 40" stroke="#5a3a1a" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+          <!-- Whiskers -->
+          <line x1="60" y1="36" x2="78" y2="38" stroke="#5a3a1a" stroke-width="0.7" opacity="0.55"/>
+          <line x1="60" y1="40" x2="78" y2="40" stroke="#5a3a1a" stroke-width="0.7" opacity="0.55"/>
+          <line x1="110" y1="36" x2="92" y2="38" stroke="#5a3a1a" stroke-width="0.7" opacity="0.55"/>
+          <line x1="110" y1="40" x2="92" y2="40" stroke="#5a3a1a" stroke-width="0.7" opacity="0.55"/>
+          <!-- Paws -->
+          <ellipse cx="62" cy="80" rx="13" ry="8" fill="#c8956a"/>
+          <ellipse cx="108" cy="80" rx="13" ry="8" fill="#c8956a"/>
+          <ellipse cx="56" cy="84" rx="3.5" ry="2.5" fill="#b07848"/>
+          <ellipse cx="62" cy="86" rx="3.5" ry="2.5" fill="#b07848"/>
+          <ellipse cx="68" cy="84" rx="3.5" ry="2.5" fill="#b07848"/>
+          <ellipse cx="102" cy="84" rx="3.5" ry="2.5" fill="#b07848"/>
+          <ellipse cx="108" cy="86" rx="3.5" ry="2.5" fill="#b07848"/>
+          <ellipse cx="114" cy="84" rx="3.5" ry="2.5" fill="#b07848"/>
+        </g>
+        <!-- ZZZ -->
+        <text class="zzz"  x="112" y="24" font-size="12" fill="#f4845f" font-weight="bold" font-family="sans-serif" opacity="0">z</text>
+        <text class="zzz2" x="122" y="14" font-size="15" fill="#f4845f" font-weight="bold" font-family="sans-serif" opacity="0">z</text>
+        <text class="zzz3" x="135" y="4"  font-size="18" fill="#f4845f" font-weight="bold" font-family="sans-serif" opacity="0">Z</text>
+      </svg>
     <div class="search-card">
       <label class="input-label" for="peppolInput">🐾 Ange Peppol-ID eller organisationsnummer</label>
       <div class="input-row">
@@ -229,6 +284,8 @@
         Format: <code>0007:orgnummer</code> &nbsp;·&nbsp;
         <a onclick="doExample()">testa ett exempel</a>
       </p>
+    </div>
+
     </div>
 
     <div class="spinner" id="spinner">🐱</div>
