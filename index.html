@@ -318,7 +318,7 @@
     function renderResult(data) {
       const cats = ['😸','😺','😻','🐱','😼'];
       document.getElementById('resultCat').textContent = cats[Math.floor(Math.random()*cats.length)];
-      document.getElementById('resultTitle').textContent = data.participantId;
+      document.getElementById('resultTitle').textContent = data.name || data.participantId;
       document.getElementById('resultSubtitle').textContent = `${data.documentTypeCount} dokumenttyp${data.documentTypeCount !== 1 ? 'er' : ''}`;
 
       // Info grid
@@ -326,7 +326,8 @@
       grid.innerHTML = '';
       const infoItems = [
         { label: 'Participant ID', value: data.participantId },
-        { label: 'SMP-server', value: `<a href="${data.smpBase}" target="_blank">${data.smpBase}</a>` },
+        { label: 'Land', value: data.countryCode || '–' },
+        { label: 'SMP-server', value: data.smpUrl ? `<a href="${data.smpUrl}" target="_blank">${data.smpUrl}</a>` : '–' },
         { label: 'SML DNS-namn', value: data.smlDnsName },
         { label: 'SMP Services URL', value: `<a href="${data.smpUrl}" target="_blank">Öppna XML ↗</a>` },
       ];
@@ -347,8 +348,8 @@
         data.documentTypes.forEach(doc => {
           const pill = document.createElement('div');
           pill.className = 'doctype-pill';
-          const icon = doc.niceName.split(' ').pop(); // last char is emoji
-          const name = doc.niceName.slice(0, -2).trim();
+          const icon = doc.icon || '📄';
+          const name = doc.name || doc.id;
           pill.innerHTML = `
             <span class="pill-icon">${icon}</span>
             <div>
