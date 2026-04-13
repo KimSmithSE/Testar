@@ -194,8 +194,8 @@
     }
 
     .search-card-wrapper { position: relative; margin-top: 60px; }
-    .sleeping-cat { position: absolute; top: -82px; left: 50%; transform: translateX(-50%); width: 170px; pointer-events: none; z-index: 2; }
-    .cat-tail { transform-origin: 56px 72px; animation: tailWag 3.5s ease-in-out infinite; }
+    .sleeping-cat { position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 170px; pointer-events: none; z-index: 2; }
+    .cat-tail { transform-origin: 108px 78px; animation: tailWag 3.5s ease-in-out infinite; }
     @keyframes tailWag { 0%,100%{transform:rotate(0deg)} 40%{transform:rotate(16deg)} 70%{transform:rotate(-10deg)} }
     .cat-chest { animation: breathe 3s ease-in-out infinite; transform-origin: 80px 52px; }
     @keyframes breathe { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(1.07)} }
@@ -224,16 +224,16 @@
         <h1>Peppol Lookup</h1>
         <span class="logo-cat" style="animation-delay:-1.5s">🐱</span>
       </div>
-      <p class="tagline">// söker i Peppol-nätverket · purrfessionally</p>
+      <p class="tagline">// söker i Peppol-nätverket</p>
     </div>
 
   <div class="search-card-wrapper">
-      <svg class="sleeping-cat" viewBox="0 0 170 90" xmlns="http://www.w3.org/2000/svg">
-        <!-- Tail -->
+      <svg class="sleeping-cat" viewBox="0 0 170 130" xmlns="http://www.w3.org/2000/svg">
+        <!-- Tail - hangs down over card top -->
         <g class="cat-tail">
-          <path d="M56 72 Q30 88 34 108 Q38 122 52 118" stroke="#c8956a" stroke-width="9" fill="none" stroke-linecap="round"/>
-          <path d="M56 72 Q30 88 34 108 Q38 122 52 118" stroke="#d4a574" stroke-width="5.5" fill="none" stroke-linecap="round"/>
-          <ellipse cx="53" cy="116" rx="8" ry="6" fill="#b07848" transform="rotate(-20 53 116)"/>
+          <path d="M108 78 Q130 95 126 112 Q122 124 108 120" stroke="#c8956a" stroke-width="9" fill="none" stroke-linecap="round"/>
+          <path d="M108 78 Q130 95 126 112 Q122 124 108 120" stroke="#d4a574" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="109" cy="118" rx="8" ry="6" fill="#b07848" transform="rotate(20 109 118)"/>
         </g>
         <!-- Body + head -->
         <g class="cat-chest">
