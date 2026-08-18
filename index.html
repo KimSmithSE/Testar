@@ -285,11 +285,24 @@
     transform: translateY(0) rotate(5deg);
   }
 }
+
+/* Mouse-following cat */
+.cursor-cat {
+  position: fixed;
+  font-size: 2.5rem;
+  pointer-events: none;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  transform: translate(-50%, -50%);
+}
   </style>
 </head>
 <body>
   <div class="walking-cat" id="walkingCat">🐈</div>
 <div class="zoomies-cat" id="zoomiesCat">🐱💨</div>
+<div class="cursor-cat" id="cursorCat">😸</div>
 
   <div class="floaty-cat" style="top:5%;left:3%;animation-duration:7s;animation-delay:0s">🐱</div>
   <div class="floaty-cat" style="top:12%;right:5%;animation-duration:9s;animation-delay:-2s">😸</div>
@@ -565,6 +578,48 @@ function launchZoomies() {
 
 /* First zoomies after a little while */
 setTimeout(launchZoomies, 8000);
+
+/* Mouse-following cat */
+
+const cursorCat = document.getElementById('cursorCat');
+const cursorCatVariants = ['😸', '😺', '😻', '🐱', '😼', '😹'];
+let cursorCatIndex = 0;
+
+let mouseX = 0;
+let mouseY = 0;
+let catX = 0;
+let catY = 0;
+
+const followSpeed = 0.15; // How quickly the cat follows (0-1, lower = slower)
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+function animateCursorCat() {
+  // Smooth follow towards mouse
+  catX += (mouseX - catX) * followSpeed;
+  catY += (mouseY - catY) * followSpeed;
+  
+  // Update position
+  cursorCat.style.left = catX + 'px';
+  cursorCat.style.top = catY + 'px';
+  
+  // Rotate cat to face mouse direction
+  const angle = Math.atan2(mouseY - catY, mouseX - catX) * (180 / Math.PI);
+  cursorCat.style.transform = `translate(-50%, -50%) rotate(${angle + 90}deg)`;
+  
+  requestAnimationFrame(animateCursorCat);
+}
+
+// Change cat appearance every 3 seconds
+setInterval(() => {
+  cursorCatIndex = (cursorCatIndex + 1) % cursorCatVariants.length;
+  cursorCat.textContent = cursorCatVariants[cursorCatIndex];
+}, 3000);
+
+animateCursorCat();
   </script>
 </body>
 </html>
