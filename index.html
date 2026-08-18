@@ -203,9 +203,93 @@
     .zzz2 { animation: floatZ 3s ease-in-out infinite 1s; }
     .zzz3 { animation: floatZ 3s ease-in-out infinite 2s; }
     @keyframes floatZ { 0%{opacity:0;transform:translate(0,0) scale(0.7)} 20%{opacity:1} 80%{opacity:0.6} 100%{opacity:0;transform:translate(-14px,-24px) scale(1.2)} }
+    /* Walking patrol cat */
+.walking-cat {
+  position: fixed;
+  bottom: 15px;
+  left: -120px;
+  font-size: 3rem;
+  pointer-events: none;
+  z-index: 50;
+  animation: patrolCat 28s linear infinite;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+@keyframes patrolCat {
+  0% {
+    left: -120px;
+    transform: scaleX(1);
+  }
+
+  49% {
+    left: calc(100vw + 40px);
+    transform: scaleX(1);
+  }
+
+  50% {
+    left: calc(100vw + 40px);
+    transform: scaleX(-1);
+  }
+
+  99% {
+    left: -120px;
+    transform: scaleX(-1);
+  }
+
+  100% {
+    left: -120px;
+    transform: scaleX(1);
+  }
+}
+
+/* Zoomies cat */
+.zoomies-cat {
+  position: fixed;
+  top: 50%;
+  left: -250px;
+  font-size: 4rem;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+}
+
+.zoomies-cat.running {
+  opacity: 1;
+  animation: zoomiesRun 1.8s linear;
+}
+
+@keyframes zoomiesRun {
+  from {
+    left: -250px;
+    transform: translateY(0) rotate(-5deg);
+  }
+
+  20% {
+    transform: translateY(-4px) rotate(3deg);
+  }
+
+  40% {
+    transform: translateY(4px) rotate(-3deg);
+  }
+
+  60% {
+    transform: translateY(-3px) rotate(2deg);
+  }
+
+  80% {
+    transform: translateY(3px) rotate(-2deg);
+  }
+
+  to {
+    left: calc(100vw + 250px);
+    transform: translateY(0) rotate(5deg);
+  }
+}
   </style>
 </head>
 <body>
+  <div class="walking-cat" id="walkingCat">🐈</div>
+<div class="zoomies-cat" id="zoomiesCat">🐱💨</div>
 
   <div class="floaty-cat" style="top:5%;left:3%;animation-duration:7s;animation-delay:0s">🐱</div>
   <div class="floaty-cat" style="top:12%;right:5%;animation-duration:9s;animation-delay:-2s">😸</div>
@@ -430,6 +514,57 @@
     document.getElementById('peppolInput').addEventListener('keydown', e => {
       if (e.key === 'Enter') doLookup();
     });
+    /* Walking cat that changes appearance */
+
+const walkingCat = document.getElementById('walkingCat');
+
+const patrolCats = [
+  '🐈',
+  '🐱',
+  '😺',
+  '😸',
+  '😼',
+  '😹'
+];
+
+let patrolIndex = 0;
+
+setInterval(() => {
+  patrolIndex = (patrolIndex + 1) % patrolCats.length;
+  walkingCat.textContent = patrolCats[patrolIndex];
+}, 14000); // ungefär när katten vänder
+
+/* Random zoomies */
+
+const zoomiesCat = document.getElementById('zoomiesCat');
+
+const zoomiesVariants = [
+  '🐱💨',
+  '😺💨',
+  '😸💨',
+  '😹💨',
+  '🐈💨'
+];
+
+function launchZoomies() {
+  zoomiesCat.textContent =
+    zoomiesVariants[Math.floor(Math.random() * zoomiesVariants.length)];
+
+  zoomiesCat.style.top =
+    (20 + Math.random() * 60) + '%';
+
+  zoomiesCat.classList.add('running');
+
+  setTimeout(() => {
+    zoomiesCat.classList.remove('running');
+  }, 1800);
+
+  const nextRun = 15000 + Math.random() * 25000;
+  setTimeout(launchZoomies, nextRun);
+}
+
+/* First zoomies after a little while */
+setTimeout(launchZoomies, 8000);
   </script>
 </body>
 </html>
